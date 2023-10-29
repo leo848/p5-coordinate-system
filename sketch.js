@@ -1,10 +1,11 @@
 let grid;
 let points = [];
 let poly;
+let canvas;
 let dragged = false;
 
 function setup() {
-  createCanvas(1000, 800);
+  canvas = createCanvas(1000, 800).elt;
 
   textAlign(CENTER, CENTER);
 
