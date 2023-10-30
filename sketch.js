@@ -1,6 +1,6 @@
 let grid;
 let points = [];
-let poly;
+let poly, polyd;
 let canvas;
 let dragged = false;
 
@@ -16,6 +16,10 @@ function setup() {
   // p = new Point(0, 1);
   // grid.add(p);
   
+  polyd = new Polynomial([0]);
+  polyd.color = color(200, 200, 230);
+  grid.add(polyd);
+
   poly = new Polynomial([0]);
   grid.add(poly);
 
@@ -23,6 +27,11 @@ function setup() {
     // grid.add(p);
     // poly = p.derivative();
   // }
+}
+
+function updatePolynomial() {
+  poly.coeffs = lagrangeInterpolation(points)
+  polyd.coeffs = poly.derivative().coeffs;
 }
 
 function draw() {
@@ -42,13 +51,10 @@ function mouseReleased() {
   let point = new Point(x, y);
   points.push(point);
   grid.add(point);
-
-  poly.coeffs = lagrangeInterpolation(points)
+  updatePolynomial();
 }
 
-function mouseDragged(evt) {
-  console.log(evt.which)
-
+function mouseDragged() {
   dragged = true;
   let [px, py] = grid.displayToCoord(pmouseX, pmouseY);
   let [cx, cy] = grid.displayToCoord(mouseX, mouseY);
@@ -58,7 +64,7 @@ function mouseDragged(evt) {
     if (dist(dx, dy, pmouseX, pmouseY) < 15) {
       p.x = cx;
       p.y = cy;
-      poly.coeffs = lagrangeInterpolation(points)
+      updatePolynomial();
       return;
     }
   }

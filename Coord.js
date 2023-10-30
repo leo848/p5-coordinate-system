@@ -245,8 +245,7 @@ class Polynomial {
   }
 
   eval(x) {
-    const { pow } = Math;
-    return this.coeffs.map((coeff, exponent) => coeff * pow(x, exponent)).reduce((a,b)=>a+b);
+    return evaluate(this.coeffs, x);
   }
 
 
