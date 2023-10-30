@@ -7,6 +7,7 @@ let dragged = false;
 function setup() {
   canvas = createCanvas(1000, 800).elt;
 
+  pixelDensity(1);
   textAlign(CENTER, CENTER);
 
   const pad = 10;

@@ -49,8 +49,8 @@ class CoordSystem {
         }
 
         // Draw the grid.
-        strokeWeight(1);
-        stroke(150);
+        strokeWeight(2);
+        stroke(220);
         if (axis === "x") {
           line(x, this.y, x, this.y + this.h);
         } else {
