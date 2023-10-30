@@ -65,7 +65,6 @@ function newtonRaphson(coefficients, initialGuess, tolerance) {
     
     while (Math.abs(fx0) > tolerance) {
         x1 = x0 - fx0 / fpx0;
-        console.log({x0, x1, fx0})
         fx0 = evaluate(coefficients, x1);
         fpx0 = evaluateDerivative(coefficients, x1);
         
@@ -79,31 +78,35 @@ function newtonRaphson(coefficients, initialGuess, tolerance) {
     
     return null; // No root found within the given tolerance
 }
-
-function findRoots(coefficients, initialGuess=0, tolerance=1e-10) {
+function findRoots(coefficients, initialGuess=0, tolerance=1e-5) {
     let roots = [];
-    let polynomialDegree = coefficients.length - 1;
     
-    while (polynomialDegree > 0) {
+    while (coefficients.length > 3) {
         let root = newtonRaphson(coefficients, initialGuess, tolerance);
         if (root !== null) {
             roots.push(root);
-            // Divide the polynomial by (x - root) using synthetic division
+            // Update coefficients array based on the found root
             let newCoefficients = [coefficients[0]];
-            for (let i = 1; i < coefficients.length; i++) {
+            for (let i = 1; i < coefficients.length - 1; i++) {
                 newCoefficients.push(coefficients[i] + root * newCoefficients[i - 1]);
             }
-            coefficients = newCoefficients.slice(0, -1);
-            polynomialDegree--;
+            coefficients = newCoefficients;
         } else {
             // Unable to find a root, exit the loop
             break;
         }
     }
-
-    // if (coefficients.length === 1) {
-    //     roots.push(-coefficients[0] / coefficients[0]);
-    // }
+    
+    // The remaining quadratic equation can be solved directly
+    if (coefficients.length === 3) {
+        let discriminant = coefficients[1] * coefficients[1] - 4 * coefficients[0] * coefficients[2];
+        if (discriminant >= 0) {
+            roots.push((-coefficients[1] + Math.sqrt(discriminant)) / (2 * coefficients[0]));
+            roots.push((-coefficients[1] - Math.sqrt(discriminant)) / (2 * coefficients[0]));
+        }
+    } else if (coefficients.length === 2 && !roots.length) {
+      roots.push(-coefficients[0] / coefficients[1]);
+    }
     
     return roots;
 }
